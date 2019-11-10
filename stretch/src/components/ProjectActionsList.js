@@ -3,11 +3,13 @@ import axios from 'axios';
 import { Input, FormGroup, Label, Modal, ModalHeader, ModalBody, ModalFooter, Table, Button } from 'reactstrap';
 
 class ProjectActionsList extends Component {
-   constructor () {
-    super(); 
-    this.project_id = 1;
+   constructor (props) {
+    super(props); 
+    const { project_id } = this.props.match.params
+    this.project_id = project_id;
    }
     
+
   state = {
     Actions: [],
     newActionData: {

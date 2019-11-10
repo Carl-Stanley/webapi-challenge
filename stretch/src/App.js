@@ -9,7 +9,7 @@ function App() {
     <div className="App">
             
       <Route path="/projectslist" component={ProjectsList} />
-		  <Route path="/projectactionslist" component={ProjectActionsList} />
+		  <Route path="/projectactionslist/:project_id" component={ProjectActionsList} />
 
     </div>
   );

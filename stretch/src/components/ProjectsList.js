@@ -116,7 +116,7 @@ class ProjectsList extends Component {
          <td>
             <Button color="success" size="sm" className="mr-2" onClick={this.editProject.bind(this, Project.id, Project.name, Project.description, Project.completed )}>Edit Project</Button>
             <Button color="danger" size="sm" onClick={this.deleteProject.bind(this, Project.id)}>Delete Project</Button> {' '}
-            <Link to ={`/projectactionslist/${Project.id}`} >  <Button color="success" size="sm" className="mr-2">Project Actions</Button> </Link>
+            <Link to={`/projectactionslist/${Project.id}`}>  <Button color="success" size="sm" className="mr-2">Project Actions</Button> </Link>
           </td>
         </tr>
       )
