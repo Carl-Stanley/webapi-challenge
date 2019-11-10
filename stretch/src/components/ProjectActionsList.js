@@ -60,15 +60,15 @@ class ProjectActionsList extends Component {
     })
   }
   updateAction() {
-    let {project_id,description,notes, completed } = this.state.editActionData;
+    let {description,notes, completed } = this.state.editActionData;
     axios.put(`http://localhost:4000/api/projects/${this.project_id}/actions/` + this.state.editActionData.id, {
-    project_id,description,notes,completed
+    description,notes,completed
     })
     .then((response) => {
       this._refreshActions();
 
       this.setState({
-        editActionModal: false, editActionData: { id: '', project_id: this.project_id, description: '',notes: '', completed: '' }
+        editActionModal: false, editActionData: { id: '', description: '',notes: '', completed: '' }
       })      
     })
     .catch(error => {
