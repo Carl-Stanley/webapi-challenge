@@ -66,7 +66,7 @@ class ProjectActionsList extends Component {
       this._refreshActions();
 
       this.setState({
-        editActionModal: false, editActionData: { id: '',project_id: '', description: '',notes: '', completed: '' }
+        editActionModal: false, editActionData: { id: '', project_id: this.project_id, description: '',notes: '', completed: '' }
       })      
     })
     .catch(error => {
@@ -74,9 +74,9 @@ class ProjectActionsList extends Component {
      
     });
   }
-  editAction(id, project_id,description,notes,completed) {
+  editAction(id, description,notes,completed) {
     this.setState({
-      editActionData: { id, project_id,description,notes,completed }, editActionModal: ! this.state.editActionModal
+      editActionData: { id, description,notes,completed }, editActionModal: ! this.state.editActionModal
     });
   }
  
@@ -92,7 +92,7 @@ class ProjectActionsList extends Component {
   }
 
   _refreshActions() {      
-		axios.get('http://localhost:4000/api/projects/1/actions')
+		axios.get(`http://localhost:4000/api/projects/${this.project_id}/actions`)
     .then(response => {
       this.setState({
         Actions: response.data
