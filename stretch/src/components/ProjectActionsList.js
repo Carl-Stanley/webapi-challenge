@@ -41,31 +41,32 @@ class ActionsActionsList extends Component {
     });
   }
   addAction() {
-    axios.post('http://localhost:4000/api/actions', this.state.newActionData).then((response) => {
+    axios.post(`http://localhost:4000/api/projects/${this.project_id}/actions/`, this.state.newActionData).then((response) => {
       let { Actions } = this.state;
 
       Actions.push(response.data);
 
       this.setState({ Actions, newActionModal: false, newActionData: {
-        name: '',
+        project_id: '',
         description: '',
+        notes: '',
         completed: ''
-      }})      
+            }})      
    })
    .catch(error => {
     console.log(error)
     })
   }
   updateAction() {
-    let {name,description,completed } = this.state.editActionData;
+    let {project_id,description,notes, completed } = this.state.editActionData;
     axios.put(`http://localhost:4000/api/projects/${this.project_id}/actions/` + this.state.editActionData.id, {
-    name,description,completed
+    project_id,description,notes,completed
     })
     .then((response) => {
       this._refreshActions();
 
       this.setState({
-        editActionModal: false, editActionData: { id: '',name: '', description: '', completed: '' }
+        editActionModal: false, editActionData: { id: '',project_id: '', description: '',notes: '', completed: '' }
       })      
     })
     .catch(error => {
@@ -73,9 +74,9 @@ class ActionsActionsList extends Component {
      
     });
   }
-  editAction(id, name,description,completed) {
+  editAction(id, project_id,description,notes,completed) {
     this.setState({
-      editActionData: { id, name,description,completed }, editActionModal: ! this.state.editActionModal
+      editActionData: { id, project_id,description,notes,completed }, editActionModal: ! this.state.editActionModal
     });
   }
  
@@ -110,8 +111,8 @@ class ActionsActionsList extends Component {
       return (
         <tr key={Action.id}>   
          <td>{Action.id}</td>    
-        <td>{Action.name}</td>
-        <td>{Action.description}</td>
+       <td>{Action.description}</td>
+       <td>{Action.notes}</td>
         <td>{Action.completed}</td>
                 
          <td>
@@ -134,11 +135,11 @@ class ActionsActionsList extends Component {
             
             {/* Add New Action Data */}  
             
-            {/* Action Title */}
+            {/* Action Description */}
 
           <FormGroup>
-            <Label for="ActionName">Action Name</Label>
-            <Input id="ActionName" value={this.state.newActionData.name} onChange={(e) => {
+            <Label for="ActionDescription">Action Description</Label>
+            <Input id="ActionDescription" value={this.state.newActionData.description} onChange={(e) => {
               let { newActionData } = this.state;
 
               newActionData.name = e.target.value;
@@ -147,11 +148,11 @@ class ActionsActionsList extends Component {
             }} />
           </FormGroup>
 
-            {/* Action Description */}
+            {/* Action Notes */}
 
           <FormGroup>
-            <Label for="ActionDescription">Action Description</Label>
-            <Input id="ActionDescription" value={this.state.newActionData.rating} onChange={(e) => {
+            <Label for="ActionNotes">Action Notes</Label>
+            <Input id="ActionNotes" value={this.state.newActionData.notes} onChange={(e) => {
               let { newActionData } = this.state;
 
               newActionData.description = e.target.value;
@@ -194,28 +195,28 @@ class ActionsActionsList extends Component {
           
           {/* Edit Action Data */}  
           
-          {/* name */} 
+          {/* Action Descrption */} 
 
           <FormGroup>
           
-            <Label for="name">Action Name</Label>
-            <Input id="name" value={this.state.editActionData.name} onChange={(e) => {
-              let { editActionData } = this.state;
-
-              editActionData.name = e.target.value;
-
-              this.setState({ editActionData });
-            }} />
-          </FormGroup>
-
-          {/* description */}
-
-          <FormGroup>
             <Label for="description">Action Description</Label>
             <Input id="description" value={this.state.editActionData.description} onChange={(e) => {
               let { editActionData } = this.state;
 
               editActionData.description = e.target.value;
+
+              this.setState({ editActionData });
+            }} />
+          </FormGroup>
+
+          {/* Action Notes */}
+
+          <FormGroup>
+            <Label for="notes">Action Notes</Label>
+            <Input id="notes" value={this.state.editActionData.notes} onChange={(e) => {
+              let { editActionData } = this.state;
+
+              editActionData.notes = e.target.value;
 
               this.setState({ editActionData });
             }} />
@@ -246,7 +247,8 @@ class ActionsActionsList extends Component {
           <thead>
             <tr>
               <th>#</th>
-              <th>Action Name</th>
+              <th>Action Description</th>
+              <th>Action Notes</th>
               <th>completed</th>
 			        <th>Actions</th>
             </tr>
