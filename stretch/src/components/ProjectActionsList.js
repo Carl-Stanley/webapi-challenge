@@ -201,8 +201,8 @@ class ProjectActionsList extends Component {
 
           <FormGroup>
           
-            <Label for="description">Action Description</Label>
-            <Input id="description" value={this.state.editActionData.description} onChange={(e) => {
+            <Label for="action_description">Action Description</Label>
+            <Input id="action_description" value={this.state.editActionData.description} onChange={(e) => {
               let { editActionData } = this.state;
 
               editActionData.description = e.target.value;
@@ -214,8 +214,8 @@ class ProjectActionsList extends Component {
           {/* Action Notes */}
 
           <FormGroup>
-            <Label for="notes">Action Notes</Label>
-            <Input id="notes" value={this.state.editActionData.notes} onChange={(e) => {
+            <Label for="action_notes">Action Notes</Label>
+            <Input id="action_notes" value={this.state.editActionData.notes} onChange={(e) => {
               let { editActionData } = this.state;
 
               editActionData.notes = e.target.value;
