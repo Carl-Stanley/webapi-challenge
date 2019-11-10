@@ -12,14 +12,14 @@ class ProjectsList extends Component {
   state = {
     Projects: [],
     newProjectData: {
-        project_name: '',
-        project_description: '',
+        name: '',
+        description: '',
         completed: ''
     },
     editProjectData: {
         id: '',
-        project_name: '',
-        project_description: '',
+        name: '',
+        description: '',
         completed: ''
     },
     newProjectModal: false,
@@ -46,8 +46,8 @@ class ProjectsList extends Component {
       Projects.push(response.data);
 
       this.setState({ Projects, newProjectModal: false, newProjectData: {
-        project_name: '',
-        project_description: '',
+        name: '',
+        description: '',
         completed: ''
       }})      
    })
@@ -56,15 +56,15 @@ class ProjectsList extends Component {
     })
   }
   updateProject() {
-    let {project_name,project_description,completed } = this.state.editProjectData;
+    let {name,description,completed } = this.state.editProjectData;
     axios.put('http://localhost:4000/api/projects/' + this.state.editProjectData.id, {
-    project_name,project_description,completed
+    name,description,completed
     })
     .then((response) => {
       this._refreshProjects();
 
       this.setState({
-        editProjectModal: false, editProjectData: { id: '',project_name: '', project_description: '', completed: '' }
+        editProjectModal: false, editProjectData: { id: '',name: '', description: '', completed: '' }
       })      
     })
     .catch(error => {
@@ -72,9 +72,9 @@ class ProjectsList extends Component {
      
     });
   }
-  editProject(id, project_name,project_description,completed) {
+  editProject(id, name,description,completed) {
     this.setState({
-      editProjectData: { id, project_name,project_description,completed }, editProjectModal: ! this.state.editProjectModal
+      editProjectData: { id, name,description,completed }, editProjectModal: ! this.state.editProjectModal
     });
   }
  
@@ -109,12 +109,12 @@ class ProjectsList extends Component {
       return (
         <tr key={Project.id}>   
          <td>{Project.id}</td>    
-        <td>{Project.project_name}</td>
-        <td>{Project.project_description}</td>
+        <td>{Project.name}</td>
+        <td>{Project.description}</td>
         <td>{Project.completed}</td>
                 
          <td>
-            <Button color="success" size="sm" className="mr-2" onClick={this.editProject.bind(this, Project.id, Project.project_name, Project.project_description, Project.completed )}>Edit Project</Button>
+            <Button color="success" size="sm" className="mr-2" onClick={this.editProject.bind(this, Project.id, Project.name, Project.description, Project.completed )}>Edit Project</Button>
             <Button color="danger" size="sm" onClick={this.deleteProject.bind(this, Project.id)}>Delete Project</Button> {' '}
             {/*<Link to ={`/projectsactionslist/${Project.id}`} >  <Button color="success" size="sm" className="mr-2">Project Actions</Button> </Link>*/}
           </td>
@@ -138,10 +138,10 @@ class ProjectsList extends Component {
 
           <FormGroup>
             <Label for="ProjectName">Project Name</Label>
-            <Input id="ProjectName" value={this.state.newProjectData.project_name} onChange={(e) => {
+            <Input id="ProjectName" value={this.state.newProjectData.name} onChange={(e) => {
               let { newProjectData } = this.state;
 
-              newProjectData.project_name = e.target.value;
+              newProjectData.name = e.target.value;
 
               this.setState({ newProjectData });
             }} />
@@ -154,7 +154,7 @@ class ProjectsList extends Component {
             <Input id="ProjectDescription" value={this.state.newProjectData.rating} onChange={(e) => {
               let { newProjectData } = this.state;
 
-              newProjectData.project_description = e.target.value;
+              newProjectData.description = e.target.value;
 
               this.setState({ newProjectData });
             }} />
@@ -194,28 +194,28 @@ class ProjectsList extends Component {
           
           {/* Edit Project Data */}  
           
-          {/* project_name */} 
+          {/* name */} 
 
           <FormGroup>
           
-            <Label for="project_name">Project Name</Label>
-            <Input id="project_name" value={this.state.editProjectData.project_name} onChange={(e) => {
+            <Label for="name">Project Name</Label>
+            <Input id="name" value={this.state.editProjectData.name} onChange={(e) => {
               let { editProjectData } = this.state;
 
-              editProjectData.project_name = e.target.value;
+              editProjectData.name = e.target.value;
 
               this.setState({ editProjectData });
             }} />
           </FormGroup>
 
-          {/* project_description */}
+          {/* description */}
 
           <FormGroup>
-            <Label for="project_description">Project Description</Label>
-            <Input id="project_description" value={this.state.editProjectData.project_description} onChange={(e) => {
+            <Label for="description">Project Description</Label>
+            <Input id="description" value={this.state.editProjectData.description} onChange={(e) => {
               let { editProjectData } = this.state;
 
-              editProjectData.project_description = e.target.value;
+              editProjectData.description = e.target.value;
 
               this.setState({ editProjectData });
             }} />
@@ -248,7 +248,7 @@ class ProjectsList extends Component {
               <th>#</th>
               <th>Project Name</th>
               <th>completed</th>
-			  <th>Actions</th>
+			        <th>Actions</th>
             </tr>
           </thead>
 
