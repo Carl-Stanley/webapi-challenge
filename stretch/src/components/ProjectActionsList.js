@@ -3,49 +3,51 @@ import axios from 'axios';
 import { Input, FormGroup, Label, Modal, ModalHeader, ModalBody, ModalFooter, Table, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-class ProjectsActionsList extends Component {
+class ActionsActionsList extends Component {
    constructor () {
     super(); 
     
    }
     
   state = {
-    Projects: [],
-    newProjectData: {
-        name: '',
+    Actions: [],
+    newActionData: {
+        project_id: '',
         description: '',
+        notes: '',
         completed: ''
     },
-    editProjectData: {
+    editActionData: {
         id: '',
-        name: '',
+        project_id: '',
         description: '',
+        notes: '',
         completed: ''
     },
-    newProjectModal: false,
-    editProjectModal: false
+    newActionModal: false,
+    editActionModal: false
   }
  componentWillMount() {
-   this._refreshProjects();
+   this._refreshActions();
  }
 
-  toggleNewProjectModal() {
+  toggleNewActionModal() {
     this.setState({
-      newProjectModal: ! this.state.newProjectModal
+      newActionModal: ! this.state.newActionModal
     });
   }
-  toggleEditProjectModal() {
+  toggleEditActionModal() {
     this.setState({
-      editProjectModal: ! this.state.editProjectModal
+      editActionModal: ! this.state.editActionModal
     });
   }
-  addProject() {
-    axios.post('http://localhost:4000/api/projects', this.state.newProjectData).then((response) => {
-      let { Projects } = this.state;
+  addAction() {
+    axios.post('http://localhost:4000/api/actions', this.state.newActionData).then((response) => {
+      let { Actions } = this.state;
 
-      Projects.push(response.data);
+      Actions.push(response.data);
 
-      this.setState({ Projects, newProjectModal: false, newProjectData: {
+      this.setState({ Actions, newActionModal: false, newActionData: {
         name: '',
         description: '',
         completed: ''
@@ -55,16 +57,16 @@ class ProjectsActionsList extends Component {
     console.log(error)
     })
   }
-  updateProject() {
-    let {name,description,completed } = this.state.editProjectData;
-    axios.put('http://localhost:4000/api/projects/' + this.state.editProjectData.id, {
+  updateAction() {
+    let {name,description,completed } = this.state.editActionData;
+    axios.put('http://localhost:4000/api/actions/' + this.state.editActionData.id, {
     name,description,completed
     })
     .then((response) => {
-      this._refreshProjects();
+      this._refreshActions();
 
       this.setState({
-        editProjectModal: false, editProjectData: { id: '',name: '', description: '', completed: '' }
+        editActionModal: false, editActionData: { id: '',name: '', description: '', completed: '' }
       })      
     })
     .catch(error => {
@@ -72,28 +74,28 @@ class ProjectsActionsList extends Component {
      
     });
   }
-  editProject(id, name,description,completed) {
+  editAction(id, name,description,completed) {
     this.setState({
-      editProjectData: { id, name,description,completed }, editProjectModal: ! this.state.editProjectModal
+      editActionData: { id, name,description,completed }, editActionModal: ! this.state.editActionModal
     });
   }
  
-  deleteProject(id) {
+  deleteAction(id) {
     
-    axios.delete('http://localhost:4000/api/projects/' + id)
+    axios.delete('http://localhost:4000/api/actions/' + id)
       .then((response) => {
-      this._refreshProjects();
+      this._refreshActions();
       })
      .catch(error => {
       console.log(error);
     });
   }
 
-  _refreshProjects() {      
-		axios.get('http://localhost:4000/api/projects/')
+  _refreshActions() {      
+		axios.get('http://localhost:4000/api/actions/')
     .then(response => {
       this.setState({
-        Projects: response.data
+        Actions: response.data
       })
     })
     .catch(error => {
@@ -105,58 +107,58 @@ class ProjectsActionsList extends Component {
   render() {
     
     
-    let Projects = this.state.Projects.map((Project) => {
+    let Actions = this.state.Actions.map((Action) => {
       return (
-        <tr key={Project.id}>   
-         <td>{Project.id}</td>    
-        <td>{Project.name}</td>
-        <td>{Project.description}</td>
-        <td>{Project.completed}</td>
+        <tr key={Action.id}>   
+         <td>{Action.id}</td>    
+        <td>{Action.name}</td>
+        <td>{Action.description}</td>
+        <td>{Action.completed}</td>
                 
          <td>
-            <Button color="success" size="sm" className="mr-2" onClick={this.editProject.bind(this, Project.id, Project.name, Project.description, Project.completed )}>Edit Project</Button>
-            <Button color="danger" size="sm" onClick={this.deleteProject.bind(this, Project.id)}>Delete Project</Button> {' '}
-            {/*<Link to ={`/projectsactionslist/${Project.id}`} >  <Button color="success" size="sm" className="mr-2">Project Actions</Button> </Link>*/}
+            <Button color="success" size="sm" className="mr-2" onClick={this.editAction.bind(this, Action.id, Action.name, Action.description, Action.completed )}>Edit Action</Button>
+            <Button color="danger" size="sm" onClick={this.deleteAction.bind(this, Action.id)}>Delete Action</Button> {' '}
+            {/*<Link to ={`/actionsactionslist/${Action.id}`} >  <Button color="success" size="sm" className="mr-2">Action Actions</Button> </Link>*/}
           </td>
         </tr>
       )
     });
     return (
-      <div className="projects-Container">
+      <div className="actions-Container">
 
-      <h1>Scheduled Projects</h1>
+      <h1>Scheduled Actions</h1>
       
-      {'   '}<Button className="my-3" color="primary" onClick={this.toggleNewProjectModal.bind(this)}>Add Project</Button>
+      {'   '}<Button className="my-3" color="primary" onClick={this.toggleNewActionModal.bind(this)}>Add Action</Button>
 
-      <Modal isOpen={this.state.newProjectModal} toggle={this.toggleNewProjectModal.bind(this)}>
-        <ModalHeader toggle={this.toggleNewProjectModal.bind(this)}>Add a new Project</ModalHeader>
+      <Modal isOpen={this.state.newActionModal} toggle={this.toggleNewActionModal.bind(this)}>
+        <ModalHeader toggle={this.toggleNewActionModal.bind(this)}>Add a new Action</ModalHeader>
         <ModalBody>
             
-            {/* Add New Project Data */}  
+            {/* Add New Action Data */}  
             
-            {/* Project Title */}
+            {/* Action Title */}
 
           <FormGroup>
-            <Label for="ProjectName">Project Name</Label>
-            <Input id="ProjectName" value={this.state.newProjectData.name} onChange={(e) => {
-              let { newProjectData } = this.state;
+            <Label for="ActionName">Action Name</Label>
+            <Input id="ActionName" value={this.state.newActionData.name} onChange={(e) => {
+              let { newActionData } = this.state;
 
-              newProjectData.name = e.target.value;
+              newActionData.name = e.target.value;
 
-              this.setState({ newProjectData });
+              this.setState({ newActionData });
             }} />
           </FormGroup>
 
-            {/* Project Description */}
+            {/* Action Description */}
 
           <FormGroup>
-            <Label for="ProjectDescription">Project Description</Label>
-            <Input id="ProjectDescription" value={this.state.newProjectData.rating} onChange={(e) => {
-              let { newProjectData } = this.state;
+            <Label for="ActionDescription">Action Description</Label>
+            <Input id="ActionDescription" value={this.state.newActionData.rating} onChange={(e) => {
+              let { newActionData } = this.state;
 
-              newProjectData.description = e.target.value;
+              newActionData.description = e.target.value;
 
-              this.setState({ newProjectData });
+              this.setState({ newActionData });
             }} />
           </FormGroup>
               
@@ -168,11 +170,11 @@ class ProjectsActionsList extends Component {
 
             {/*<Label for="completed"> Completed:</Label>*/}
              <Input id="completed" type='hidden' value={false} onChange={(e) => {
-              let { newProjectData } = this.state;
+              let { newActionData } = this.state;
 
-              newProjectData.completed = e.target.value;
+              newActionData.completed = e.target.value;
 
-              this.setState({ newProjectData });
+              this.setState({ newActionData });
             }} />
         
 
@@ -183,41 +185,41 @@ class ProjectsActionsList extends Component {
         
         <ModalFooter>
 
-          <Button color="primary" onClick={this.addProject.bind(this)}>Add Project</Button>{' '}
-          <Button color="secondary" onClick={this.toggleNewProjectModal.bind(this)}>Cancel</Button>
+          <Button color="primary" onClick={this.addAction.bind(this)}>Add Action</Button>{' '}
+          <Button color="secondary" onClick={this.toggleNewActionModal.bind(this)}>Cancel</Button>
         </ModalFooter>
       </Modal>
 
-      <Modal isOpen={this.state.editProjectModal} toggle={this.toggleEditProjectModal.bind(this)}>
-        <ModalHeader toggle={this.toggleEditProjectModal.bind(this)}>Edit/Preview Project Details</ModalHeader>
+      <Modal isOpen={this.state.editActionModal} toggle={this.toggleEditActionModal.bind(this)}>
+        <ModalHeader toggle={this.toggleEditActionModal.bind(this)}>Edit/Preview Action Details</ModalHeader>
         <ModalBody>
           
-          {/* Edit Project Data */}  
+          {/* Edit Action Data */}  
           
           {/* name */} 
 
           <FormGroup>
           
-            <Label for="name">Project Name</Label>
-            <Input id="name" value={this.state.editProjectData.name} onChange={(e) => {
-              let { editProjectData } = this.state;
+            <Label for="name">Action Name</Label>
+            <Input id="name" value={this.state.editActionData.name} onChange={(e) => {
+              let { editActionData } = this.state;
 
-              editProjectData.name = e.target.value;
+              editActionData.name = e.target.value;
 
-              this.setState({ editProjectData });
+              this.setState({ editActionData });
             }} />
           </FormGroup>
 
           {/* description */}
 
           <FormGroup>
-            <Label for="description">Project Description</Label>
-            <Input id="description" value={this.state.editProjectData.description} onChange={(e) => {
-              let { editProjectData } = this.state;
+            <Label for="description">Action Description</Label>
+            <Input id="description" value={this.state.editActionData.description} onChange={(e) => {
+              let { editActionData } = this.state;
 
-              editProjectData.description = e.target.value;
+              editActionData.description = e.target.value;
 
-              this.setState({ editProjectData });
+              this.setState({ editActionData });
             }} />
           </FormGroup>       
           
@@ -225,35 +227,35 @@ class ProjectsActionsList extends Component {
 
           <FormGroup>
             <Label for="completed">Completed</Label>{' '}
-            <Input id="completed" value={this.state.editProjectData.completed} onChange={(e) => {
-              let { editProjectData } = this.state;
+            <Input id="completed" value={this.state.editActionData.completed} onChange={(e) => {
+              let { editActionData } = this.state;
 
-              editProjectData.completed = e.target.value;
+              editActionData.completed = e.target.value;
 
-              this.setState({ editProjectData });
+              this.setState({ editActionData });
             }} />
           </FormGroup>
 
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={this.updateProject.bind(this)}>Update Project</Button>{' '}
-          <Button color="secondary" onClick={this.toggleEditProjectModal.bind(this)}>Cancel</Button>
+          <Button color="primary" onClick={this.updateAction.bind(this)}>Update Action</Button>{' '}
+          <Button color="secondary" onClick={this.toggleEditActionModal.bind(this)}>Cancel</Button>
         </ModalFooter>
       </Modal>
 
 
-        <Table className='theProjects'>
+        <Table className='theActions'>
           <thead>
             <tr>
               <th>#</th>
-              <th>Project Name</th>
+              <th>Action Name</th>
               <th>completed</th>
 			        <th>Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {Projects}
+            {Actions}
           </tbody>
         </Table>
        
@@ -263,4 +265,4 @@ class ProjectsActionsList extends Component {
   }
 }
 
-export default ProjectsActionsList;
+export default ActionsActionsList;
