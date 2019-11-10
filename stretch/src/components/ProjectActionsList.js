@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Input, FormGroup, Label, Modal, ModalHeader, ModalBody, ModalFooter, Table, Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 class ProjectActionsList extends Component {
    constructor (props) {
@@ -130,7 +131,7 @@ class ProjectActionsList extends Component {
       <h1>Scheduled Actions</h1>
       
       {'   '}<Button className="my-3" color="primary" onClick={this.toggleNewActionModal.bind(this)}>Add Action</Button>
-
+      <Link to={`/`}>  <Button color="primary" size="sm" className="mr-2">Back to Projects</Button> </Link>
       <Modal isOpen={this.state.newActionModal} toggle={this.toggleNewActionModal.bind(this)}>
         <ModalHeader toggle={this.toggleNewActionModal.bind(this)}>Add a new Action</ModalHeader>
         <ModalBody>

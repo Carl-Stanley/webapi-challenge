@@ -127,7 +127,7 @@ class ProjectsList extends Component {
       <h1>Scheduled Projects</h1>
       
       {'   '}<Button className="my-3" color="primary" onClick={this.toggleNewProjectModal.bind(this)}>Add Project</Button>
-
+      
       <Modal isOpen={this.state.newProjectModal} toggle={this.toggleNewProjectModal.bind(this)}>
         <ModalHeader toggle={this.toggleNewProjectModal.bind(this)}>Add a new Project</ModalHeader>
         <ModalBody>
