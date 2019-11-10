@@ -1,105 +1,99 @@
-import React, { Component } from 'react'; 
+import React, { Component } from 'react';
+import axios from 'axios';
 import { Input, FormGroup, Label, Modal, ModalHeader, ModalBody, ModalFooter, Table, Button } from 'reactstrap';
-import moment from 'moment';
-import {axiosWithAuth} from '../utils/axiosWithAuth';
+import { Link } from 'react-router-dom';
 
-class EventsTasks extends Component {
+class ProjectsActionsList extends Component {
    constructor () {
-
     super(); 
-   
-    this.loggedinUserID = 6;
-    this.Event_id = 33;        
+    
    }
     
   state = {
-    Tasks: [],
-    newTaskData: {
-        task_name: '',
-        event_id: '',
-        task_completed: false
-   },
-    editTaskData: {
-        id: '',
-        task_name: '',
-        event_id: '',
-        task_completed: ''      
+    Projects: [],
+    newProjectData: {
+        name: '',
+        description: '',
+        completed: ''
     },
-    newTaskModal: false,
-    editTaskModal: false
+    editProjectData: {
+        id: '',
+        name: '',
+        description: '',
+        completed: ''
+    },
+    newProjectModal: false,
+    editProjectModal: false
   }
-  componentDidMount() {
-    this._refreshTasks();
-  }
-  toggleNewTaskModal() {
-    this.setState({
-      newTaskModal: ! this.state.newTaskModal
-    });
-  }
-  toggleEditTaskModal() {
-    this.setState({
-      editTaskModal: ! this.state.editTaskModal
-    });
-  }
-  addTask() {
-      
-    axiosWithAuth()    
-    .post('/api/tasks/?event_id=' + this.Event_id, this.state.newTaskData).then((response) => {
-      let { Tasks } = this.state;
-      
-      Tasks.push(response.data);
+ componentWillMount() {
+   this._refreshProjects();
+ }
 
-      this.setState({ Tasks, newTaskModal: false, newTaskData: {
-        task_name: '',
+  toggleNewProjectModal() {
+    this.setState({
+      newProjectModal: ! this.state.newProjectModal
+    });
+  }
+  toggleEditProjectModal() {
+    this.setState({
+      editProjectModal: ! this.state.editProjectModal
+    });
+  }
+  addProject() {
+    axios.post('http://localhost:4000/api/projects', this.state.newProjectData).then((response) => {
+      let { Projects } = this.state;
+
+      Projects.push(response.data);
+
+      this.setState({ Projects, newProjectModal: false, newProjectData: {
+        name: '',
+        description: '',
         completed: ''
       }})      
    })
    .catch(error => {
     console.log(error)
-    
     })
   }
-  updateTask() {
-    let { task_name,task_completed } = this.state.editTaskData;
-    axiosWithAuth()
-    .put('/api/tasks/' + this.state.editTaskData.id, {
-      task_name, task_completed: task_completed === "true" ? true:false 
+  updateProject() {
+    let {name,description,completed } = this.state.editProjectData;
+    axios.put('http://localhost:4000/api/projects/' + this.state.editProjectData.id, {
+    name,description,completed
     })
     .then((response) => {
-      this._refreshTasks();
-       // debugger;
+      this._refreshProjects();
+
       this.setState({
-        editTaskModal: false, editTaskData: { id: '',task_name: '', task_completed: '' }
+        editProjectModal: false, editProjectData: { id: '',name: '', description: '', completed: '' }
       })      
     })
     .catch(error => {
       console.log(error);
-     //debugger;
+     
     });
   }
-  editTask(id, task_name, task_completed) {
+  editProject(id, name,description,completed) {
     this.setState({
-      editTaskData: { id, task_name, task_completed }, editTaskModal: ! this.state.editTaskModal
+      editProjectData: { id, name,description,completed }, editProjectModal: ! this.state.editProjectModal
     });
   }
  
-  deleteTask(id) {
-    axiosWithAuth()
-    .delete('/api/tasks/' + id)
+  deleteProject(id) {
+    
+    axios.delete('http://localhost:4000/api/projects/' + id)
       .then((response) => {
-      this._refreshTasks();
+      this._refreshProjects();
       })
      .catch(error => {
       console.log(error);
     });
   }
 
-  _refreshTasks() {    
-    axiosWithAuth()
-		.get('/api/tasks/?event_id=' + this.Event_id)
+  _refreshProjects() {      
+		axios.get('http://localhost:4000/api/projects/')
     .then(response => {
       this.setState({
-        Tasks: response.data
+        Projects: response.data
       })
     })
     .catch(error => {
@@ -110,70 +104,78 @@ class EventsTasks extends Component {
   
   render() {
     
-    /*
-    let comp = '';
     
-    if(Task.completed) {
-
-      comp = 'Yes'
-
-    } else {
-
-      comp = 'No'
-
-    }*/
-    let Tasks = this.state.Tasks.map((Task) => {
+    let Projects = this.state.Projects.map((Project) => {
       return (
-        <tr key={Task.id}>   
-         <td>{Task.id}</td>    
-        <td>{Task.task_name}</td>
-        <td>{Task.task_completed}</td>
-                  
-          <td>
-            <Button color="success" size="sm" className="mr-2" onClick={this.editTask.bind(this, Task.id, Task.task_name,Task.task_completed )}>Edit Task</Button>
-            <Button color="danger" size="sm" onClick={this.deleteTask.bind(this, Task.id)}>Delete Task</Button> {' '}
+        <tr key={Project.id}>   
+         <td>{Project.id}</td>    
+        <td>{Project.name}</td>
+        <td>{Project.description}</td>
+        <td>{Project.completed}</td>
+                
+         <td>
+            <Button color="success" size="sm" className="mr-2" onClick={this.editProject.bind(this, Project.id, Project.name, Project.description, Project.completed )}>Edit Project</Button>
+            <Button color="danger" size="sm" onClick={this.deleteProject.bind(this, Project.id)}>Delete Project</Button> {' '}
+            {/*<Link to ={`/projectsactionslist/${Project.id}`} >  <Button color="success" size="sm" className="mr-2">Project Actions</Button> </Link>*/}
           </td>
         </tr>
       )
     });
     return (
-      <div className="events-Container">
+      <div className="projects-Container">
 
-      <h1>Event Tasks</h1>
+      <h1>Scheduled Projects</h1>
       
-      {'   '}<Button className="my-3" color="primary" onClick={this.toggleNewTaskModal.bind(this)}>Add Task</Button>
+      {'   '}<Button className="my-3" color="primary" onClick={this.toggleNewProjectModal.bind(this)}>Add Project</Button>
 
-      <Modal isOpen={this.state.newTaskModal} toggle={this.toggleNewTaskModal.bind(this)}>
-        <ModalHeader toggle={this.toggleNewTaskModal.bind(this)}>Add a new Task</ModalHeader>
+      <Modal isOpen={this.state.newProjectModal} toggle={this.toggleNewProjectModal.bind(this)}>
+        <ModalHeader toggle={this.toggleNewProjectModal.bind(this)}>Add a new Project</ModalHeader>
         <ModalBody>
             
-            {/* Add New Task Data */}  
+            {/* Add New Project Data */}  
             
-            {/* Event Task */}
+            {/* Project Title */}
 
           <FormGroup>
-            <Label for="TaskDescription">Task Description</Label>
-            <Input id="TaskDescription" value={this.state.newTaskData.task_name} onChange={(e) => {
-              let { newTaskData } = this.state;
+            <Label for="ProjectName">Project Name</Label>
+            <Input id="ProjectName" value={this.state.newProjectData.name} onChange={(e) => {
+              let { newProjectData } = this.state;
 
-              newTaskData.task_name = e.target.value;
+              newProjectData.name = e.target.value;
 
-              this.setState({ newTaskData });
+              this.setState({ newProjectData });
             }} />
           </FormGroup>
-            
-        
+
+            {/* Project Description */}
+
+          <FormGroup>
+            <Label for="ProjectDescription">Project Description</Label>
+            <Input id="ProjectDescription" value={this.state.newProjectData.rating} onChange={(e) => {
+              let { newProjectData } = this.state;
+
+              newProjectData.description = e.target.value;
+
+              this.setState({ newProjectData });
+            }} />
+          </FormGroup>
+              
         {/* completed */} 
-        <FormGroup>            
 
-          <Input id="completed" type='hidden' value={false} onChange={(e) => {
-              let { newTaskData } = this.state;
+        <FormGroup>
 
-              newTaskData.task_completed = e.target.value;
+            
 
-              this.setState({ newTaskData });
+            {/*<Label for="completed"> Completed:</Label>*/}
+             <Input id="completed" type='hidden' value={false} onChange={(e) => {
+              let { newProjectData } = this.state;
+
+              newProjectData.completed = e.target.value;
+
+              this.setState({ newProjectData });
             }} />
         
+
           </FormGroup>       
 
 
@@ -181,64 +183,77 @@ class EventsTasks extends Component {
         
         <ModalFooter>
 
-          <Button color="primary" onClick={this.addTask.bind(this)}>Add Task</Button>{' '}
-          <Button color="secondary" onClick={this.toggleNewTaskModal.bind(this)}>Cancel</Button>
+          <Button color="primary" onClick={this.addProject.bind(this)}>Add Project</Button>{' '}
+          <Button color="secondary" onClick={this.toggleNewProjectModal.bind(this)}>Cancel</Button>
         </ModalFooter>
       </Modal>
 
-      <Modal isOpen={this.state.editTaskModal} toggle={this.toggleEditTaskModal.bind(this)}>
-        <ModalHeader toggle={this.toggleEditTaskModal.bind(this)}>Edit/Preview Task Details</ModalHeader>
+      <Modal isOpen={this.state.editProjectModal} toggle={this.toggleEditProjectModal.bind(this)}>
+        <ModalHeader toggle={this.toggleEditProjectModal.bind(this)}>Edit/Preview Project Details</ModalHeader>
         <ModalBody>
           
-          {/* Edit Task Data */}  
+          {/* Edit Project Data */}  
           
-          {/* task_title */} 
+          {/* name */} 
 
           <FormGroup>
           
-            <Label for="task_title">Event Title</Label>
-            <Input id="task_title" value={this.state.editTaskData.task_name} onChange={(e) => {
-              let { editTaskData } = this.state;
+            <Label for="name">Project Name</Label>
+            <Input id="name" value={this.state.editProjectData.name} onChange={(e) => {
+              let { editProjectData } = this.state;
 
-              editTaskData.task_name = e.target.value;
+              editProjectData.name = e.target.value;
 
-              this.setState({ editTaskData: {...editTaskData}});
+              this.setState({ editProjectData });
             }} />
           </FormGroup>
-                           
+
+          {/* description */}
+
+          <FormGroup>
+            <Label for="description">Project Description</Label>
+            <Input id="description" value={this.state.editProjectData.description} onChange={(e) => {
+              let { editProjectData } = this.state;
+
+              editProjectData.description = e.target.value;
+
+              this.setState({ editProjectData });
+            }} />
+          </FormGroup>       
+          
           {/* completed */}
 
           <FormGroup>
             <Label for="completed">Completed</Label>{' '}
-            <Input id="completed" value={this.state.editTaskData.completed} onChange={(e) => {
-              let { editTaskData } = this.state;
+            <Input id="completed" value={this.state.editProjectData.completed} onChange={(e) => {
+              let { editProjectData } = this.state;
 
-              editTaskData.completed = e.target.value;
+              editProjectData.completed = e.target.value;
 
-              this.setState({ editTaskData });
+              this.setState({ editProjectData });
             }} />
           </FormGroup>
 
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={this.updateTask.bind(this)}>Update Task</Button>{' '}
-          <Button color="secondary" onClick={this.toggleEditTaskModal.bind(this)}>Cancel</Button>
+          <Button color="primary" onClick={this.updateProject.bind(this)}>Update Project</Button>{' '}
+          <Button color="secondary" onClick={this.toggleEditProjectModal.bind(this)}>Cancel</Button>
         </ModalFooter>
       </Modal>
 
 
-        <Table className='theTasks'>
+        <Table className='theProjects'>
           <thead>
             <tr>
               <th>#</th>
-              <th>Task Title</th>
-              <th>Completed</th>
-              <th>Actions</th>
+              <th>Project Name</th>
+              <th>completed</th>
+			        <th>Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {Tasks}
+            {Projects}
           </tbody>
         </Table>
        
@@ -248,4 +263,4 @@ class EventsTasks extends Component {
   }
 }
 
-export default EventsTasks;
+export default ProjectsActionsList;
