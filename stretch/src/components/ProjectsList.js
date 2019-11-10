@@ -247,6 +247,7 @@ class ProjectsList extends Component {
             <tr>
               <th>#</th>
               <th>Project Name</th>
+              <th>Project Description</th>
               <th>completed</th>
 			        <th>Actions</th>
             </tr>

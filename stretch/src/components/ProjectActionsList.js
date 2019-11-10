@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Input, FormGroup, Label, Modal, ModalHeader, ModalBody, ModalFooter, Table, Button } from 'reactstrap';
-import { Link } from 'react-router-dom';
 
 class ActionsActionsList extends Component {
    constructor () {
     super(); 
-    
+    this.project_id = 1;
    }
     
   state = {
@@ -59,7 +58,7 @@ class ActionsActionsList extends Component {
   }
   updateAction() {
     let {name,description,completed } = this.state.editActionData;
-    axios.put('http://localhost:4000/api/actions/' + this.state.editActionData.id, {
+    axios.put(`http://localhost:4000/api/projects/${this.project_id}/actions/` + this.state.editActionData.id, {
     name,description,completed
     })
     .then((response) => {
@@ -82,7 +81,7 @@ class ActionsActionsList extends Component {
  
   deleteAction(id) {
     
-    axios.delete('http://localhost:4000/api/actions/' + id)
+    axios.delete(`http://localhost:4000/api/projects/${this.project_id}/actions/` + id)
       .then((response) => {
       this._refreshActions();
       })
@@ -92,7 +91,7 @@ class ActionsActionsList extends Component {
   }
 
   _refreshActions() {      
-		axios.get('http://localhost:4000/api/actions/')
+		axios.get(`http://localhost:4000/api/projects/${this.project_id}/actions`)
     .then(response => {
       this.setState({
         Actions: response.data
@@ -118,8 +117,7 @@ class ActionsActionsList extends Component {
          <td>
             <Button color="success" size="sm" className="mr-2" onClick={this.editAction.bind(this, Action.id, Action.name, Action.description, Action.completed )}>Edit Action</Button>
             <Button color="danger" size="sm" onClick={this.deleteAction.bind(this, Action.id)}>Delete Action</Button> {' '}
-            {/*<Link to ={`/actionsactionslist/${Action.id}`} >  <Button color="success" size="sm" className="mr-2">Action Actions</Button> </Link>*/}
-          </td>
+            </td>
         </tr>
       )
     });
