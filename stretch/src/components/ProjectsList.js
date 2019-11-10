@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { Input, FormGroup, Label, Modal, ModalHeader, ModalBody, ModalFooter, Table, Button } from 'reactstrap';
-import moment from 'moment';
-import {axiosWithAuth} from '../utils/axiosWithAuth';
 import { Link } from 'react-router-dom';
 
 class ProjectsList extends Component {
@@ -41,8 +40,7 @@ class ProjectsList extends Component {
     });
   }
   addProject() {
-    axiosWithAuth()
-    .post('/api/projects', this.state.newProjectData).then((response) => {
+    axios.post('http://localhost:4000/api/projects', this.state.newProjectData).then((response) => {
       let { Projects } = this.state;
 
       Projects.push(response.data);
@@ -59,8 +57,7 @@ class ProjectsList extends Component {
   }
   updateProject() {
     let {project_name,project_description,completed } = this.state.editProjectData;
-    axiosWithAuth()
-    .put('/api/projects/' + this.state.editProjectData.id, {
+    axios.put('http://localhost:4000/api/projects/' + this.state.editProjectData.id, {
     project_name,project_description,completed
     })
     .then((response) => {
@@ -82,8 +79,8 @@ class ProjectsList extends Component {
   }
  
   deleteProject(id) {
-    axiosWithAuth()
-    .delete('/api/projects/' + id)
+    
+    axios.delete('http://localhost:4000/api/projects/' + id)
       .then((response) => {
       this._refreshProjects();
       })
@@ -92,9 +89,8 @@ class ProjectsList extends Component {
     });
   }
 
-  _refreshProjects() {    
-    axiosWithAuth()
-		.get('/api/projects/')
+  _refreshProjects() {      
+		axios.get('http://localhost:4000/api/projects/')
     .then(response => {
       this.setState({
         Projects: response.data
@@ -108,29 +104,19 @@ class ProjectsList extends Component {
   
   render() {
     
-    let comp = '';
     
-    if(Project.completed) {
-
-      comp = 'Yes'
-
-    } else {
-
-      comp = 'No'
-
-    }
     let Projects = this.state.Projects.map((Project) => {
       return (
         <tr key={Project.id}>   
          <td>{Project.id}</td>    
         <td>{Project.project_name}</td>
         <td>{Project.project_description}</td>
-        <td>{comp}</td>
+        <td>{Project.completed}</td>
                 
          <td>
             <Button color="success" size="sm" className="mr-2" onClick={this.editProject.bind(this, Project.id, Project.project_name, Project.project_description, Project.completed )}>Edit Project</Button>
             <Button color="danger" size="sm" onClick={this.deleteProject.bind(this, Project.id)}>Delete Project</Button> {' '}
-            <Link to ={`/projectsactionslist/${Project.id}`} >  <Button color="success" size="sm" className="mr-2">Project Actions</Button> </Link>
+            {/*<Link to ={`/projectsactionslist/${Project.id}`} >  <Button color="success" size="sm" className="mr-2">Project Actions</Button> </Link>*/}
           </td>
         </tr>
       )
