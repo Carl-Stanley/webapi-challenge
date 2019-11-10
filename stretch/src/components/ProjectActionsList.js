@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Input, FormGroup, Label, Modal, ModalHeader, ModalBody, ModalFooter, Table, Button } from 'reactstrap';
 
-class ActionsActionsList extends Component {
+class ProjectActionsList extends Component {
    constructor () {
     super(); 
     this.project_id = 1;
@@ -92,7 +92,7 @@ class ActionsActionsList extends Component {
   }
 
   _refreshActions() {      
-		axios.get(`http://localhost:4000/api/projects/${this.project_id}/actions`)
+		axios.get('http://localhost:4000/api/projects/1/actions')
     .then(response => {
       this.setState({
         Actions: response.data
@@ -142,7 +142,7 @@ class ActionsActionsList extends Component {
             <Input id="ActionDescription" value={this.state.newActionData.description} onChange={(e) => {
               let { newActionData } = this.state;
 
-              newActionData.name = e.target.value;
+              newActionData.description = e.target.value;
 
               this.setState({ newActionData });
             }} />
@@ -155,7 +155,7 @@ class ActionsActionsList extends Component {
             <Input id="ActionNotes" value={this.state.newActionData.notes} onChange={(e) => {
               let { newActionData } = this.state;
 
-              newActionData.description = e.target.value;
+              newActionData.notes = e.target.value;
 
               this.setState({ newActionData });
             }} />
@@ -265,4 +265,4 @@ class ActionsActionsList extends Component {
   }
 }
 
-export default ActionsActionsList;
+export default ProjectActionsList;
