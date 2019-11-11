@@ -240,8 +240,8 @@ class ProjectActionsList extends Component {
           {/* completed */}
 
           <FormGroup>
-            <Label for="completed">Completed</Label>{' '}
-            <Input id="completed" value={this.state.editActionData.completed} onChange={(e) => {
+            <Label for="completed"></Label>{' '}
+            <Input id="completed" type="hidden" value={this.state.editActionData.completed} onChange={(e) => {
               let { editActionData } = this.state;
 
               editActionData.completed = e.target.value;

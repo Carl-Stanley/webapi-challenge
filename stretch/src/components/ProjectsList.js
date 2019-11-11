@@ -1,14 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component,useState } from 'react';
 import axios from 'axios';
 import { Input, FormGroup, Label, Modal, ModalHeader, ModalBody, ModalFooter, Table, Button } from 'reactstrap';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 class ProjectsList extends Component {
    constructor () {
     super(); 
-    
+
+  
    }
-    
+   
   state = {
     Projects: [],
     newProjectData: {
@@ -235,8 +237,8 @@ class ProjectsList extends Component {
           {/* completed */}
 
           <FormGroup>
-            <Label for="completed">Completed</Label>{' '}
-            <Input id="completed" value={this.state.editProjectData.completed} onChange={(e) => {
+            <Label for="completed" type="hidden"></Label>{' '}
+            <Input id="completed" type="hidden" value={this.state.editProjectData.completed} onChange={(e) => {
               let { editProjectData } = this.state;
 
               editProjectData.completed = e.target.value;
