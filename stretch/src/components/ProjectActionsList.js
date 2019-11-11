@@ -110,13 +110,25 @@ class ProjectActionsList extends Component {
   render() {
     
     
+    
     let Actions = this.state.Actions.map((Action) => {
+
+      let comp = "No";
+
+    if(Action.completed) {
+      comp = "Yes";
+    } else {
+
+      comp = "No";
+
+    }
+
       return (
         <tr key={Action.id}>   
          <td>{Action.id}</td>    
        <td>{Action.description}</td>
        <td>{Action.notes}</td>
-        <td>{Action.completed}</td>
+        <td>{comp}</td>
                 
          <td>
             <Button color="success" size="sm" className="mr-2" onClick={this.editAction.bind(this, Action.id, Action.description, Action.notes, Action.completed )}>Edit Action</Button>

@@ -106,12 +106,23 @@ class ProjectsList extends Component {
     
     
     let Projects = this.state.Projects.map((Project) => {
+
+      let comp = "No";
+
+    if(Project.completed) {
+      comp = "Yes";
+    } else {
+
+      comp = "No";
+
+    }
+
       return (
         <tr key={Project.id}>   
          <td>{Project.id}</td>    
         <td>{Project.name}</td>
         <td>{Project.description}</td>
-        <td>{Project.completed}</td>
+        <td>{comp}</td>
                 
          <td>
             <Button color="success" size="sm" className="mr-2" onClick={this.editProject.bind(this, Project.id, Project.name, Project.description, Project.completed )}>Edit Project</Button>
