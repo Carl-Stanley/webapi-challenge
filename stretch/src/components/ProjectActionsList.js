@@ -140,7 +140,7 @@ class ProjectActionsList extends Component {
     return (
       <div className="actions-Container">
 
-      <h1>Scheduled Actions</h1>
+      <h1>Actions</h1>
       
       {'   '}<Button className="my-3" color="primary" onClick={this.toggleNewActionModal.bind(this)}>Add Action</Button>
       <Link to={`/`}>  <Button color="primary" size="sm" className="mr-2">Back to Projects</Button> </Link>

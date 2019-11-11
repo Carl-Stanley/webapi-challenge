@@ -137,7 +137,7 @@ class ProjectsList extends Component {
     return (
       <div className="projects-Container">
 
-      <h1>Scheduled Projects</h1>
+      
       
       {'   '}<Button className="my-3" color="primary" onClick={this.toggleNewProjectModal.bind(this)}>Add Project</Button>
       
