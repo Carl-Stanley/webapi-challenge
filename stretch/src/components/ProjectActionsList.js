@@ -119,7 +119,7 @@ class ProjectActionsList extends Component {
         <td>{Action.completed}</td>
                 
          <td>
-            <Button color="success" size="sm" className="mr-2" onClick={this.editAction.bind(this, Action.id, Action.name, Action.description, Action.completed )}>Edit Action</Button>
+            <Button color="success" size="sm" className="mr-2" onClick={this.editAction.bind(this, Action.id, Action.description, Action.notes, Action.completed )}>Edit Action</Button>
             <Button color="danger" size="sm" onClick={this.deleteAction.bind(this, Action.id)}>Delete Action</Button> {' '}
             </td>
         </tr>
